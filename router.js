@@ -73,7 +73,7 @@ router.post('/register', function (req, res) {
   			err_code: 1,
   			message: 'Email or nickname aleady exists.'
   		})
-  		return res.send('邮箱或者密码已存在，请重试')
+  		return res.send('邮箱或用户名已存在，请重试')
   	}
   	// 对密码进行 md5 重复加密
   	body.password = md5(md5(body.password))
@@ -100,7 +100,11 @@ router.post('/register', function (req, res) {
 })
 
 router.get('/logout', function (req, res) {
+  // 清除登录状态
+  req.session.user = null
 
+  // 重定向到登录页
+  res.redirect('/login')
 })
 
 module.exports = router
