@@ -17,6 +17,10 @@ body {
   font-size: 26px;
 }
 
+.main .hidden{
+  display: none;
+}
+
 .main form {
   padding: 20px;
   margin-bottom: 15px;
@@ -27,7 +31,11 @@ body {
 
 .main .message {
   padding: 10px;
-  padding-bottom: 0;
   border: 1px solid #d8dee2;
   border-radius: 5px;
+}
+.message p{
+  margin: 0;
+  padding-left: 10px;
+  vertical-align: middle;
 }

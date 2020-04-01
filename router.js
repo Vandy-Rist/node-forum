@@ -13,7 +13,33 @@ router.get('/login', function (req, res) {
 })
 
 router.post('/login', function (req, res) {
-	
+	// 1. 获取表单数据
+  // 2. 查询数据库用户名密码是否正确
+  // 3. 发送响应数据
+  var body = req.body
+  User.findOne({
+    email: body.email,
+    password: md5(md5(body.password))
+  },function (err, user) {
+    if (err) {
+      return res.status(500).json({
+        error_code: 500,
+        message: err.message
+      })
+    }
+    if (!user) {
+      return res.status(200).json({
+        err_code: 1,
+        message: 'Email or password is invalid'
+      })
+    }
+    // 用户存在，登录成功，通过 session 记录登录状态
+    req.session.user = user
+    res.status(200).json({
+      err_code: 0,
+      message: 'OK'
+    })
+  }) 
 })
 
 router.get('/register', function (req, res) {
@@ -40,7 +66,7 @@ router.post('/register', function (req, res) {
   			message: '服务端错误'
   		})
   	}
-    console.log(data)
+    // console.log(data)
   	if (data) {
   		// 邮箱或者昵称已存在
   		return res.status(200).json({
@@ -70,9 +96,7 @@ router.post('/register', function (req, res) {
         message: 'OK'
       })
     })
-
   })
-
 })
 
 router.get('/logout', function (req, res) {
