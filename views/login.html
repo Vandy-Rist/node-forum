@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
-  <script src="/node_modules/jquery/dist/jquery.js"></script>
   <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="/public/css/login.css">
 </head>
@@ -31,7 +30,7 @@
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" name="">记住我
+          <input type="checkbox">记住我
         </label>
       </div>
       <button type="submit" class="btn btn-success btn-block">登录</button>
@@ -40,10 +39,12 @@
       <p>没有账号? <a href="/register">点击创建</a></p>
     </div>
   </div>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
   <script type="text/javascript">
     $('#login_form').on('submit', function (e) {
       e.preventDefault()
       var formData = $(this).serialize()
+       console.log(formData)
       $.ajax({
         url: '/login',
         type: 'post',

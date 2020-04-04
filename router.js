@@ -5,14 +5,16 @@ var md5 = require('blueimp-md5')
 var router = express.Router()
 
 router.get('/', function (req, res) {
-	res.render('index.html')
+	res.render('index.html', {
+    user: req.session.user
+  })
 })
 
 router.get('/login', function (req, res) {
 	res.render('login.html')
 })
 
-router.post('/login', function (req, res) {
+router.post('/login', function (req, res, next) {
 	// 1. 获取表单数据
   // 2. 查询数据库用户名密码是否正确
   // 3. 发送响应数据
@@ -22,10 +24,11 @@ router.post('/login', function (req, res) {
     password: md5(md5(body.password))
   },function (err, user) {
     if (err) {
-      return res.status(500).json({
-        error_code: 500,
-        message: err.message
-      })
+      // return res.status(500).json({
+      //   error_code: 500,
+      //   message: err.message
+      // })
+      return next(err)
     }
     if (!user) {
       return res.status(200).json({
@@ -35,6 +38,8 @@ router.post('/login', function (req, res) {
     }
     // 用户存在，登录成功，通过 session 记录登录状态
     req.session.user = user
+    console.log(req.session.user)
+
     res.status(200).json({
       err_code: 0,
       message: 'OK'
@@ -42,11 +47,11 @@ router.post('/login', function (req, res) {
   }) 
 })
 
-router.get('/register', function (req, res) {
+router.get('/register', function (req, res,next) {
 	res.render('register.html')
 })
 
-router.post('/register', function (req, res) {
+router.post('/register', function (req, res,next) {
 	// 1. 获取表单提交的数据
   //    req.body
   // 2. 操作数据库
@@ -61,10 +66,11 @@ router.post('/register', function (req, res) {
   	]
   }, function (err, data) {
   	if (err) {
-  		return res.status(500).json({
-  			success: false,
-  			message: '服务端错误'
-  		})
+  		// return res.status(500).json({
+  		// 	success: false,
+  		// 	message: '服务端错误'
+  		// })
+      return next(err) 
   	}
     // console.log(data)
   	if (data) {
@@ -80,10 +86,11 @@ router.post('/register', function (req, res) {
 
     new User(body).save(function (err,user) {
       if (err) {
-        return res.status(500).json({
-          err_code: 500,
-          message: 'Internet error.'
-        })
+        // return res.status(500).json({
+        //   err_code: 500,
+        //   message: 'Internet error.'
+        // })
+        return next(err)
       }
 
       // 注册成功，使用 Session 来记录用户的登录状态
@@ -97,6 +104,14 @@ router.post('/register', function (req, res) {
       })
     })
   })
+})
+
+router.get('/settings/profile', function (req, res) {
+  res.render('profile.html')
+})
+
+router.get('/settings/admin', function (req, res) {
+  res.render('admin.html')
 })
 
 router.get('/logout', function (req, res) {
