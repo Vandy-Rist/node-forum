@@ -107,11 +107,11 @@ router.post('/register', function (req, res,next) {
 })
 
 router.get('/settings/profile', function (req, res) {
-  res.render('profile.html')
+  res.render('settings/profile.html')
 })
 
 router.get('/settings/admin', function (req, res) {
-  res.render('admin.html')
+  res.render('settings/admin.html')
 })
 
 router.get('/logout', function (req, res) {
